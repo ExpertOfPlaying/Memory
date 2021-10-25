@@ -10,6 +10,7 @@ import org.junit.Assert;
 class MemoryTest {
 
 	@Test
+	@DisplayName("ChoosePlayerNumberTest")
 	void ChoosePlayerNumberTest() throws PlayerNumberTakenException {
 		MemoryInterface mint = new MemoryImplementation();
 		Player pn = mint.choosePlayerNumber("Alex", PlayerNumber.PLAYER_ONE);
@@ -24,6 +25,15 @@ class MemoryTest {
 		assertThrows(PlayerNumberTakenException.class, () -> {
 			Player pn2 = mint.choosePlayerNumber("Leonid", PlayerNumber.PLAYER_ONE);
 		});
+	}
+
+	@Test
+	@DisplayName("SetNumberOfCardPairsTest")
+	void SetNumberOfCardPairsTest() throws IllegalArgumentException {
+		MemoryInterface mint = new MemoryImplementation();
+		MemoryImplementation mimp = new MemoryImplementation();
+		mint.setNumberOfCardPairs(4);
+		Assert.assertEquals(0, 0);
 	}
 	
 

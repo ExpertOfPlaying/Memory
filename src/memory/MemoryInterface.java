@@ -1,5 +1,11 @@
 package memory;
 
+/**
+ * An Interface for the game Memory
+ * 
+ * @author Alexander Yurovskyy
+ *
+ */
 public interface MemoryInterface {
 	
 	/**
@@ -31,7 +37,7 @@ public interface MemoryInterface {
 	 * @return false , if the cards aren't matching
 	 * 		   true , if else
 	 */
-	boolean validate();
+	boolean validate() throws StateException;
 	
 	/**
 	 * Updates the playing field and the scores of each player.
