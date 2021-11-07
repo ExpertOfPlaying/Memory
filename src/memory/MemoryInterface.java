@@ -25,12 +25,18 @@ public interface MemoryInterface {
 	void setNumberOfCardPairs(int pairs) throws IllegalArgumentException; 
 	
 	/**
+	 * Gets the number of card-pairs for the game
+	 * @return NumberOfCardPairs
+	 */
+	int getNumberOfCardPairs();
+	
+	/**
 	 * Selects a card. The cards are revealed to both players.
 	 * @param key , the key of the card
 	 * @throws KeyOutOfBoundsException
 	 * @throws CardAlreadyPickedException
 	 */
-	void pickCard(int key) throws KeyOutOfBoundsException, CardAlreadyPickedException;
+	void pickCard(int key, Player p) throws KeyOutOfBoundsException, CardAlreadyPickedException;
 	
 	/**
 	 * Checks whether the cards are matching or not.
@@ -38,9 +44,9 @@ public interface MemoryInterface {
 	 * 		   true , if else
 	 */
 	boolean validate() throws StateException;
-	
+
 	/**
-	 * Updates the playing field and the scores of each player.
+	 * Updates the playing field and the scores of each player. Also, when there are no cards left, ends the game.
 	 */
 	void prepareNextRound();
 

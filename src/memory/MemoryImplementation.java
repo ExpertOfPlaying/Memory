@@ -13,11 +13,6 @@ public class MemoryImplementation implements MemoryInterface{
 		// TODO Auto-generated method stub
 		
 	}
-	
-	@Override
-	public void pickCard(int index) throws KeyOutOfBoundsException, CardAlreadyPickedException {
-		// TODO Auto-generated method stub
-	}
 
 	@Override
 	public boolean validate() {
@@ -28,6 +23,18 @@ public class MemoryImplementation implements MemoryInterface{
 	@Override
 	public void prepareNextRound() {
 		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public int getNumberOfCardPairs() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void pickCard(int key, Player p) throws KeyOutOfBoundsException, CardAlreadyPickedException {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
