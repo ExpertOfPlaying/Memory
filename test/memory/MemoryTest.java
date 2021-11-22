@@ -2,6 +2,8 @@ package memory;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.List;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -9,189 +11,186 @@ import org.junit.Assert;
 
 class MemoryTest {
 
-	//***ChoosePlayerNumber***//
-	
+	private final String alex = "Alex";
+	private final String leo = "Leo";
+
+	private MemoryImplementation getMemoryAfterPick() throws StateException, PlayerNumberTakenException {
+		MemoryImplementation mimp = new MemoryImplementation(alex, leo);
+		List<Player> playerList = mimp.getPlayer();
+		Player user1 = playerList.get(0);
+		Player user2 = playerList.get(1);
+		mimp.choosePlayerNumber(user1, PlayerNumber.PLAYER_ONE);
+		mimp.choosePlayerNumber(user2, PlayerNumber.PLAYER_TWO);
+
+		return mimp;
+	}
+
+	// ***ChoosePlayerNumber***//
+
 	@Test
 	@DisplayName("ChoosePlayerNumberTest")
-	void ChoosePlayerNumberTest() throws PlayerNumberTakenException {
-		MemoryInterface mint = new MemoryImplementation();
-		Player p1 = mint.choosePlayerNumber("Alex", PlayerNumber.PLAYER_ONE);
+	void ChoosePlayerNumberTest() throws PlayerNumberTakenException, StateException {
+		MemoryImplementation mimp = new MemoryImplementation(alex, leo);
+		List<Player> playerList = mimp.getPlayer();
+        Player user1 = playerList.get(0);
+        Player user2 = playerList.get(1);
+		PlayerNumber pn1 = mimp.choosePlayerNumber(user1, PlayerNumber.PLAYER_ONE);
+		assertEquals(pn1, PlayerNumber.PLAYER_ONE);
+		PlayerNumber pn2 = mimp.choosePlayerNumber(user2, PlayerNumber.PLAYER_TWO);
+		assertEquals(pn2, PlayerNumber.PLAYER_TWO);
 	}
-	
+
 	@Test
 	@DisplayName("Expected = PlayerNumberTakenException")
-	void ChoosePlayerNumberTakenTest() throws PlayerNumberTakenException {
-		MemoryInterface mint = new MemoryImplementation();
-		Player p1 = mint.choosePlayerNumber("Alex", PlayerNumber.PLAYER_ONE);
+	void ChoosePlayerNumberTakenTest() throws PlayerNumberTakenException, StateException {
+		MemoryImplementation mimp = new MemoryImplementation(alex, leo);
+		List<Player> playerList = mimp.getPlayer();
+        Player user1 = playerList.get(0);
+        Player user2 = playerList.get(1);
+		PlayerNumber pn1 = mimp.choosePlayerNumber(user1, PlayerNumber.PLAYER_ONE);
 		assertThrows(PlayerNumberTakenException.class, () -> {
-			Player p2 = mint.choosePlayerNumber("Leonid", PlayerNumber.PLAYER_ONE);
+			PlayerNumber pn2 = mimp.choosePlayerNumber(user2, PlayerNumber.PLAYER_ONE);
 		});
 	}
 	
-	//***SetNumberOfCardPairs***//
-	
+	@Test
+	@DisplayName("Expected = StateException")
+	void ChoosePlayerNumberSETest() throws PlayerNumberTakenException, StateException {
+		MemoryImplementation mimp = new MemoryImplementation(alex, leo);
+		List<Player> playerList = mimp.getPlayer();
+        Player user1 = playerList.get(0);
+		mimp.choosePlayerNumber(user1, PlayerNumber.PLAYER_ONE);
+		assertThrows(StateException.class, () -> {
+			mimp.choosePlayerNumber(user1, PlayerNumber.PLAYER_ONE);
+		});
+	}
+
+	// ***SetNumberOfCardPairs***//
+
 	@Test
 	@DisplayName("SetNumberOfCardPairsTest")
 	void SetNumberOfCardPairsTest() throws IllegalArgumentException {
-		MemoryInterface mint = new MemoryImplementation();
-		mint.setNumberOfCardPairs(4);
-		Assert.assertEquals(4, mint.getNumberOfCardPairs());
+		MemoryImplementation mimp = new MemoryImplementation(alex, leo);
+		mimp.setNumberOfCardPairs(4);
+		Assert.assertEquals(4, mimp.getNumberOfCardPairs());
 	}
 
 	@Test
 	@DisplayName("Expected = IllegalArgumentException")
-	void SetNumberOfCardPairsExceptionTest() throws IllegalArgumentException{
-		MemoryInterface mint = new MemoryImplementation();
+	void SetNumberOfCardPairsExceptionTest() throws IllegalArgumentException {
+		MemoryImplementation mimp = new MemoryImplementation(alex, leo);
 		assertThrows(IllegalArgumentException.class, () -> {
-			mint.setNumberOfCardPairs(-1);
+			mimp.setNumberOfCardPairs(-1);
 		});
 	}
-	
-	//***PickCard***//
+
+	// ***PickCard***//
 
 	@Test
 	@DisplayName("PickCardTest")
-	void PickCardTest1() throws KeyOutOfBoundsException, CardAlreadyPickedException, PlayerNumberTakenException{
-		MemoryInterface mint = new MemoryImplementation();
-		Player p1 = mint.choosePlayerNumber("Alex", PlayerNumber.PLAYER_ONE);
-		mint.setNumberOfCardPairs(2);
-		mint.pickCard(3, p1);
+	void PickCardTest1() throws KeyOutOfBoundsException, CardAlreadyPickedException, PlayerNumberTakenException, StateException, IllegalArgumentException, GameOverException {
+		MemoryImplementation mimp = new MemoryImplementation(alex, leo);
+		List<Player> playerList = mimp.getPlayer();
+        Player user1 = playerList.get(0);
+		PlayerNumber pn1 = mimp.choosePlayerNumber(user1, PlayerNumber.PLAYER_ONE);
+		mimp.setNumberOfCardPairs(2);
+		mimp.pickCard(3, user1);
 	}
-	
+
 	@Test
 	@DisplayName("Expected = CardAlreadyPickedException")
-	void PickCardExceptionCAPETest1() throws KeyOutOfBoundsException, CardAlreadyPickedException, PlayerNumberTakenException{
-		MemoryInterface mint = new MemoryImplementation();
-		Player p1 = mint.choosePlayerNumber("Alex", PlayerNumber.PLAYER_ONE);
-		mint.setNumberOfCardPairs(2);
-		mint.pickCard(1, p1);
+	void PickCardExceptionCAPETest1()
+			throws KeyOutOfBoundsException, CardAlreadyPickedException, PlayerNumberTakenException, StateException, IllegalArgumentException, GameOverException {
+		MemoryImplementation mimp = new MemoryImplementation(alex, leo);
+		List<Player> playerList = mimp.getPlayer();
+        Player user1 = playerList.get(0);
+		PlayerNumber pn1 = mimp.choosePlayerNumber(user1, PlayerNumber.PLAYER_ONE);
+		mimp.setNumberOfCardPairs(2);
+		mimp.pickCard(1, user1);
 		assertThrows(CardAlreadyPickedException.class, () -> {
-			mint.pickCard(1, p1);
+			mimp.pickCard(1, user1);
 		});
 	}
-	
+
 	@Test
 	@DisplayName("Expected = IllegalArgumentException")
-	void PickCardExceptionIATest1() throws KeyOutOfBoundsException, CardAlreadyPickedException, PlayerNumberTakenException{
-		MemoryInterface mint = new MemoryImplementation();
-		Player p1 = mint.choosePlayerNumber("Alex", PlayerNumber.PLAYER_ONE);
-		mint.setNumberOfCardPairs(2);
-		assertThrows(IllegalArgumentException.class, () -> {
-			mint.pickCard(-1, p1);
-		});
-	}
-	
-	/*@Test
-	@DisplayName("Expected = KeyOutOfBoundsException")
-	void PickCardExceptionKOBETest1() throws KeyOutOfBoundsException, CardAlreadyPickedException, PlayerNumberTakenException{
-		MemoryInterface mint = new MemoryImplementation();
-		Player p1 = mint.choosePlayerNumber("Alex", PlayerNumber.PLAYER_ONE);
-		mint.setNumberOfCardPairs(2);
-		assertThrows(IllegalArgumentException.class, () -> {
-			mint.pickCard(2, p1);
-		});
-	}*/
-
-	@Test
-	@DisplayName("Expected = KeyOutOfBoundsException")
-	void PickCardExceptionKOBETest2() throws KeyOutOfBoundsException, CardAlreadyPickedException, PlayerNumberTakenException{
-		MemoryInterface mint = new MemoryImplementation();
-		Player p1 = mint.choosePlayerNumber("Alex", PlayerNumber.PLAYER_ONE);
-		mint.setNumberOfCardPairs(2);
-		assertThrows(KeyOutOfBoundsException.class, () -> {
-			mint.pickCard(5, p1);
-		});
-	}
-	
-	//***Validate***//
-
-	@Test
-	@DisplayName("ValidateTest1")
-	void ValidateTest1() throws StateException, KeyOutOfBoundsException, CardAlreadyPickedException, PlayerNumberTakenException{
-		MemoryImplementation mimp = new MemoryImplementation();
-		Player p1 = mimp.choosePlayerNumber("Alex", PlayerNumber.PLAYER_ONE);
+	void PickCardExceptionIATest1()
+			throws KeyOutOfBoundsException, CardAlreadyPickedException, PlayerNumberTakenException, StateException {
+		MemoryImplementation mimp = new MemoryImplementation(alex, leo);
+		List<Player> playerList = mimp.getPlayer();
+        Player user1 = playerList.get(0);
+		PlayerNumber pn1 = mimp.choosePlayerNumber(user1, PlayerNumber.PLAYER_ONE);
 		mimp.setNumberOfCardPairs(2);
-		for(int i = 1; i < mimp.getTotalCards().size(); i++) {
-			if(mimp.getTotalCards().get(0) != mimp.getTotalCards().get(i)) {
-				mimp.pickCard(0, p1);
-				mimp.pickCard(i, p1);
-				assertFalse(mimp.validate());
-				return;
-			}
-		}
+		assertThrows(IllegalArgumentException.class, () -> {
+			mimp.pickCard(-1, user1);
+		});
 	}
-	
+
 	@Test
-	@DisplayName("ValidateTest2")
-	void ValidateTest2() throws StateException, KeyOutOfBoundsException, CardAlreadyPickedException, PlayerNumberTakenException{
-		MemoryInterface mint = new MemoryImplementation();
-		Player p1 = mint.choosePlayerNumber("Alex", PlayerNumber.PLAYER_ONE);
-		mint.setNumberOfCardPairs(1);
-		mint.pickCard(0, p1);
-		mint.pickCard(1, p1);
-		assertTrue(mint.validate());
-	}
-	
-	@Test
-	@DisplayName("Expected = StateException")
-	void ValidateSETest1() throws StateException, KeyOutOfBoundsException, CardAlreadyPickedException, PlayerNumberTakenException{
-		MemoryInterface mint = new MemoryImplementation();
-		Player p1 = mint.choosePlayerNumber("Alex", PlayerNumber.PLAYER_ONE);
-		Player p2 = mint.choosePlayerNumber("Leonid", PlayerNumber.PLAYER_TWO);
-		mint.setNumberOfCardPairs(2);
-		mint.pickCard(1, p1);
-		assertThrows(StateException.class, () -> {
-			mint.pickCard(3, p2);
+	@DisplayName("Expected = KeyOutOfBoundsException")
+	void PickCardExceptionKOBETest2()
+			throws KeyOutOfBoundsException, CardAlreadyPickedException, PlayerNumberTakenException, StateException {
+		MemoryImplementation mimp = new MemoryImplementation(alex, leo);
+		List<Player> playerList = mimp.getPlayer();
+        Player user1 = playerList.get(0);
+		PlayerNumber pn1 = mimp.choosePlayerNumber(user1, PlayerNumber.PLAYER_ONE);
+		mimp.setNumberOfCardPairs(2);
+		assertThrows(KeyOutOfBoundsException.class, () -> {
+			mimp.pickCard(5, user1);
 		});
 	}
 	
 	@Test
 	@DisplayName("Expected = StateException")
-	void ValidateSETest2() throws StateException, KeyOutOfBoundsException, CardAlreadyPickedException, PlayerNumberTakenException{
-		MemoryInterface mint = new MemoryImplementation();
-		Player p1 = mint.choosePlayerNumber("Alex", PlayerNumber.PLAYER_ONE);
-		Player p2 = mint.choosePlayerNumber("Leonid", PlayerNumber.PLAYER_TWO);
-		mint.setNumberOfCardPairs(2);
-		mint.pickCard(2, p2);
+	void PickCardExceptionSETest1()
+			throws KeyOutOfBoundsException, CardAlreadyPickedException, PlayerNumberTakenException, IllegalArgumentException, StateException, GameOverException {
+		MemoryImplementation mimp = new MemoryImplementation(alex, leo);
+		List<Player> playerList = mimp.getPlayer();
+        Player user1 = playerList.get(0);
+		PlayerNumber pn1 = mimp.choosePlayerNumber(user1, PlayerNumber.PLAYER_ONE);
+        Player user2 = playerList.get(1);
+		PlayerNumber pn2 = mimp.choosePlayerNumber(user2, PlayerNumber.PLAYER_TWO);
+		mimp.setNumberOfCardPairs(2);
+		mimp.pickCard(0, user1);
 		assertThrows(StateException.class, () -> {
-			mint.pickCard(4, p1);
+			mimp.pickCard(1, user2);
 		});
 	}
-	
-	//***PrepareNextRound***//
+
+	// ***PrepareNextRound***//
 
 	@Test
 	@DisplayName("PrepareNextRoundTest1")
-	void PrepareNextRoundTest1() throws PlayerNumberTakenException, KeyOutOfBoundsException, CardAlreadyPickedException, StateException {
-		MemoryInterface mint = new MemoryImplementation();
-		Player p1 = mint.choosePlayerNumber("Alex", PlayerNumber.PLAYER_ONE);
-		Player p2 = mint.choosePlayerNumber("Leonid", PlayerNumber.PLAYER_TWO);
-		mint.setNumberOfCardPairs(2);
-		mint.pickCard(2, p1);
-		mint.pickCard(4, p1);
-		mint.validate();
-		mint.prepareNextRound(p1);
+	void PrepareNextRoundTest1()
+			throws PlayerNumberTakenException, KeyOutOfBoundsException, CardAlreadyPickedException, StateException, IllegalArgumentException, GameOverException {
+		MemoryImplementation mimp = new MemoryImplementation(alex, leo);
+		List<Player> playerList = mimp.getPlayer();
+        Player user1 = playerList.get(0);
+		PlayerNumber pn1 = mimp.choosePlayerNumber(user1, PlayerNumber.PLAYER_ONE);
+		mimp.setNumberOfCardPairs(1);
+		assertEquals(user1.getScore(), 0);
+		mimp.pickCard(0, user1);
+		try {
+			mimp.pickCard(1, user1);
+		} catch(GameOverException e) {
+			System.out.println("Soll so sein");
+		}
+		assertEquals(user1.getScore(), 1);
 	}
-	
+
 	@Test
-	@DisplayName("Finale PrepareNextRoundTest2")
-	void PrepareNextRoundTest2() throws PlayerNumberTakenException, KeyOutOfBoundsException, CardAlreadyPickedException, StateException {
-		MemoryInterface mint = new MemoryImplementation();
-		Player p1 = mint.choosePlayerNumber("Alex", PlayerNumber.PLAYER_ONE);
-		Player p2 = mint.choosePlayerNumber("Leonid", PlayerNumber.PLAYER_TWO);
-		mint.setNumberOfCardPairs(1);
-		mint.pickCard(1, p1);
-		mint.pickCard(2, p1);
-		mint.validate();
-		mint.prepareNextRound(p1);
+	@DisplayName("Expected = GameOverException")
+	void PrepareNextRoundGOETest1()
+			throws PlayerNumberTakenException, KeyOutOfBoundsException, CardAlreadyPickedException, StateException, IllegalArgumentException, GameOverException {
+		MemoryImplementation mimp = new MemoryImplementation(alex, leo);
+		List<Player> playerList = mimp.getPlayer();
+        Player user1 = playerList.get(0);
+		PlayerNumber pn1 = mimp.choosePlayerNumber(user1, PlayerNumber.PLAYER_ONE);
+		mimp.setNumberOfCardPairs(1);
+		mimp.pickCard(0, user1);
+		assertThrows(GameOverException.class, () -> {
+			mimp.pickCard(1, user1);
+		});
 	}
-	
-	/*@Test
-	@DisplayName("PrepareNextRoundTest3")
-	void PrepareNextRoundTest3() throws PlayerNumberTakenException, KeyOutOfBoundsException, CardAlreadyPickedException, StateException {
-		MemoryInterface mint = new MemoryImplementation();
-		Player p1 = mint.choosePlayerNumber("Alex", PlayerNumber.PLAYER_ONE);
-		Player p2 = mint.choosePlayerNumber("Leonid", PlayerNumber.PLAYER_TWO);
-		
-	}*/
+
 }

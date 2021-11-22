@@ -4,15 +4,15 @@ public class Player {
 
 	private PlayerNumber pn;
 	private int score = 0;
-	private String user;
+	private String name;
 	
 	public Player(String user, PlayerNumber pn) {
 		this.pn = pn;
-		this.user = user;
+		this.name = user;
 	}
 	
 	public Player(String user) {
-        this.user = user;
+        this.name = user;
     }
 	
 	public PlayerNumber getPlayerNumber() {
@@ -24,6 +24,18 @@ public class Player {
     }
 
     public String getUser() {
-        return user;
+        return name;
+    }
+    
+    public void setScore(int score) {
+    	this.score = score;
+    }
+    
+    public void updateScore() {
+    	score++;
+    }
+    
+    public int getScore() {
+    	return score;
     }
 }

@@ -15,7 +15,7 @@ public interface MemoryInterface {
 	 * @return Player
 	 * @throws PlayerNumberTakenException
 	 */
-	Player choosePlayerNumber(String user, PlayerNumber pn) throws PlayerNumberTakenException;
+	PlayerNumber choosePlayerNumber(Player p, PlayerNumber pn) throws PlayerNumberTakenException, StateException;
 	
 	/**
 	 * Sets the number of card-pairs for the game
@@ -36,18 +36,11 @@ public interface MemoryInterface {
 	 * @throws KeyOutOfBoundsException
 	 * @throws CardAlreadyPickedException
 	 */
-	void pickCard(int key, Player p) throws KeyOutOfBoundsException, CardAlreadyPickedException;
-	
-	/**
-	 * Checks whether the cards are matching or not.
-	 * @return false , if the cards aren't matching
-	 * 		   true , if else
-	 */
-	boolean validate() throws StateException;
+	void pickCard(int key, Player p) throws StateException, KeyOutOfBoundsException, CardAlreadyPickedException, GameOverException;
 
 	/**
 	 * Updates the playing field and the scores of each player. Also, when there are no cards left, ends the game.
 	 */
-	void prepareNextRound(Player p);
+	void prepareNextRound(Player p) throws GameOverException;
 
 }
