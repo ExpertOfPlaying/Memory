@@ -48,6 +48,6 @@ public interface MemoryInterface {
 	/**
 	 * Updates the playing field and the scores of each player. Also, when there are no cards left, ends the game.
 	 */
-	void prepareNextRound();
+	void prepareNextRound(Player p);
 
 }

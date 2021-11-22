@@ -29,7 +29,7 @@ class MemoryTest {
 	}
 	
 	//***SetNumberOfCardPairs***//
-
+	
 	@Test
 	@DisplayName("SetNumberOfCardPairsTest")
 	void SetNumberOfCardPairsTest() throws IllegalArgumentException {
@@ -51,18 +51,19 @@ class MemoryTest {
 
 	@Test
 	@DisplayName("PickCardTest")
-	void PickCardTest2() throws KeyOutOfBoundsException, CardAlreadyPickedException, PlayerNumberTakenException{
+	void PickCardTest1() throws KeyOutOfBoundsException, CardAlreadyPickedException, PlayerNumberTakenException{
 		MemoryInterface mint = new MemoryImplementation();
 		Player p1 = mint.choosePlayerNumber("Alex", PlayerNumber.PLAYER_ONE);
 		mint.setNumberOfCardPairs(2);
-		mint.pickCard(4, p1);
+		mint.pickCard(3, p1);
 	}
 	
 	@Test
 	@DisplayName("Expected = CardAlreadyPickedException")
-	void PickCardExceptionCAPETest() throws KeyOutOfBoundsException, CardAlreadyPickedException, PlayerNumberTakenException{
+	void PickCardExceptionCAPETest1() throws KeyOutOfBoundsException, CardAlreadyPickedException, PlayerNumberTakenException{
 		MemoryInterface mint = new MemoryImplementation();
 		Player p1 = mint.choosePlayerNumber("Alex", PlayerNumber.PLAYER_ONE);
+		mint.setNumberOfCardPairs(2);
 		mint.pickCard(1, p1);
 		assertThrows(CardAlreadyPickedException.class, () -> {
 			mint.pickCard(1, p1);
@@ -70,14 +71,26 @@ class MemoryTest {
 	}
 	
 	@Test
+	@DisplayName("Expected = IllegalArgumentException")
+	void PickCardExceptionIATest1() throws KeyOutOfBoundsException, CardAlreadyPickedException, PlayerNumberTakenException{
+		MemoryInterface mint = new MemoryImplementation();
+		Player p1 = mint.choosePlayerNumber("Alex", PlayerNumber.PLAYER_ONE);
+		mint.setNumberOfCardPairs(2);
+		assertThrows(IllegalArgumentException.class, () -> {
+			mint.pickCard(-1, p1);
+		});
+	}
+	
+	/*@Test
 	@DisplayName("Expected = KeyOutOfBoundsException")
 	void PickCardExceptionKOBETest1() throws KeyOutOfBoundsException, CardAlreadyPickedException, PlayerNumberTakenException{
 		MemoryInterface mint = new MemoryImplementation();
 		Player p1 = mint.choosePlayerNumber("Alex", PlayerNumber.PLAYER_ONE);
-		assertThrows(KeyOutOfBoundsException.class, () -> {
-			mint.pickCard(0, p1);
+		mint.setNumberOfCardPairs(2);
+		assertThrows(IllegalArgumentException.class, () -> {
+			mint.pickCard(2, p1);
 		});
-	}
+	}*/
 
 	@Test
 	@DisplayName("Expected = KeyOutOfBoundsException")
@@ -95,12 +108,17 @@ class MemoryTest {
 	@Test
 	@DisplayName("ValidateTest1")
 	void ValidateTest1() throws StateException, KeyOutOfBoundsException, CardAlreadyPickedException, PlayerNumberTakenException{
-		MemoryInterface mint = new MemoryImplementation();
-		Player p1 = mint.choosePlayerNumber("Alex", PlayerNumber.PLAYER_ONE);
-		mint.setNumberOfCardPairs(2);
-		mint.pickCard(1, p1);
-		mint.pickCard(3, p1);
-		assertFalse(mint.validate());
+		MemoryImplementation mimp = new MemoryImplementation();
+		Player p1 = mimp.choosePlayerNumber("Alex", PlayerNumber.PLAYER_ONE);
+		mimp.setNumberOfCardPairs(2);
+		for(int i = 1; i < mimp.getTotalCards().size(); i++) {
+			if(mimp.getTotalCards().get(0) != mimp.getTotalCards().get(i)) {
+				mimp.pickCard(0, p1);
+				mimp.pickCard(i, p1);
+				assertFalse(mimp.validate());
+				return;
+			}
+		}
 	}
 	
 	@Test
@@ -108,9 +126,9 @@ class MemoryTest {
 	void ValidateTest2() throws StateException, KeyOutOfBoundsException, CardAlreadyPickedException, PlayerNumberTakenException{
 		MemoryInterface mint = new MemoryImplementation();
 		Player p1 = mint.choosePlayerNumber("Alex", PlayerNumber.PLAYER_ONE);
-		mint.setNumberOfCardPairs(2);
+		mint.setNumberOfCardPairs(1);
+		mint.pickCard(0, p1);
 		mint.pickCard(1, p1);
-		mint.pickCard(3, p1);
 		assertTrue(mint.validate());
 	}
 	
@@ -143,7 +161,7 @@ class MemoryTest {
 	//***PrepareNextRound***//
 
 	@Test
-	@DisplayName("PrepateNextRoundTest1")
+	@DisplayName("PrepareNextRoundTest1")
 	void PrepareNextRoundTest1() throws PlayerNumberTakenException, KeyOutOfBoundsException, CardAlreadyPickedException, StateException {
 		MemoryInterface mint = new MemoryImplementation();
 		Player p1 = mint.choosePlayerNumber("Alex", PlayerNumber.PLAYER_ONE);
@@ -152,11 +170,11 @@ class MemoryTest {
 		mint.pickCard(2, p1);
 		mint.pickCard(4, p1);
 		mint.validate();
-		mint.prepareNextRound();
+		mint.prepareNextRound(p1);
 	}
 	
 	@Test
-	@DisplayName("PrepateNextRoundTest2")
+	@DisplayName("Finale PrepareNextRoundTest2")
 	void PrepareNextRoundTest2() throws PlayerNumberTakenException, KeyOutOfBoundsException, CardAlreadyPickedException, StateException {
 		MemoryInterface mint = new MemoryImplementation();
 		Player p1 = mint.choosePlayerNumber("Alex", PlayerNumber.PLAYER_ONE);
@@ -165,6 +183,15 @@ class MemoryTest {
 		mint.pickCard(1, p1);
 		mint.pickCard(2, p1);
 		mint.validate();
-		mint.prepareNextRound();
+		mint.prepareNextRound(p1);
 	}
+	
+	/*@Test
+	@DisplayName("PrepareNextRoundTest3")
+	void PrepareNextRoundTest3() throws PlayerNumberTakenException, KeyOutOfBoundsException, CardAlreadyPickedException, StateException {
+		MemoryInterface mint = new MemoryImplementation();
+		Player p1 = mint.choosePlayerNumber("Alex", PlayerNumber.PLAYER_ONE);
+		Player p2 = mint.choosePlayerNumber("Leonid", PlayerNumber.PLAYER_TWO);
+		
+	}*/
 }
