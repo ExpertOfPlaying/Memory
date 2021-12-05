@@ -1,7 +1,7 @@
 package memory;
 
 import java.util.Collections;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,8 +18,8 @@ public class MemoryImplementation implements MemoryInterface {
 	private int cardPairs;
 	private int pickOne;
 	private int pickTwo;
-	private List<Character> totalCards = new LinkedList<Character>();
-	private List<Player> playerList = new LinkedList<>();
+	private List<Character> totalCards = new ArrayList<Character>();
+	private List<Player> playerList = new ArrayList<>();
 
 	public MemoryImplementation(String user1, String user2) {
 		this.pickOne = -1;
@@ -48,8 +48,7 @@ public class MemoryImplementation implements MemoryInterface {
 
 	@Override
 	public void setNumberOfCardPairs(int pairs) throws IllegalArgumentException {
-		System.out.println("Please enter the number of card pairs you would like to play with.");
-		if (pairs > 0) {
+		if (pairs > 0 && pairs <= 18) {
 			this.cardPairs = pairs;
 		} else {
 			throw new IllegalArgumentException("There must be at least one pair!");
@@ -106,11 +105,13 @@ public class MemoryImplementation implements MemoryInterface {
 			throw new KeyOutOfBoundsException("This key does not correspond with any legal key!");
 		} else if (pickOne == -1) {
 			pickOne = key;
+			System.out.println(totalCards.get(pickOne));
 		} else {
 			if (pickOne == key) {
 				throw new CardAlreadyPickedException("This card has already been picked!");
 			}
 			pickTwo = key;
+			System.out.println(totalCards.get(pickTwo));
 			prepareNextRound(p);
 		}
 	}
