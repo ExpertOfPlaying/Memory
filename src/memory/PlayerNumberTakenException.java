@@ -4,6 +4,6 @@ package memory;
 public class PlayerNumberTakenException extends Exception {
 
 	public PlayerNumberTakenException(PlayerNumber pn) {
-		super("Spielernummer " + pn + " ist bereits vergeben!");
+		super("Playernumber " + pn + " has already been chosen!");
 	}
 }
