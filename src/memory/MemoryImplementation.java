@@ -12,14 +12,14 @@ import java.util.List;
  */
 public class MemoryImplementation implements MemoryInterface {
 
-	private Player user1;
-	private Player user2;
+	private final Player user1;
+	private final Player user2;
 	private int turn;
 	private int cardPairs;
 	private int pickOne;
 	private int pickTwo;
-	private List<Character> totalCards = new ArrayList<Character>();
-	private List<Player> playerList = new ArrayList<>();
+	private final List<Character> totalCards = new ArrayList<>();
+	private final List<Player> playerList = new ArrayList<>();
 
 	public MemoryImplementation(String user1, String user2) {
 		this.pickOne = -1;
@@ -38,7 +38,7 @@ public class MemoryImplementation implements MemoryInterface {
 	public PlayerNumber choosePlayerNumber(Player p, PlayerNumber pn)
 			throws PlayerNumberTakenException, StateException {
 		if (p.getPlayerNumber() != null) {
-			throw new StateException(p.getUser() + " hat bereits" + p.getUser() + " gewaehlt!");
+			throw new StateException(p.getUser() + " has already" + p.getUser() + " picked!");
 		} else if (p == user1 && user2.getPlayerNumber() == pn || p == user2 && user1.getPlayerNumber() == pn) {
 			throw new PlayerNumberTakenException(pn);
 		}
@@ -74,6 +74,7 @@ public class MemoryImplementation implements MemoryInterface {
 			p.updateScore();
 			totalCards.set(pickOne, '?');
 			totalCards.set(pickTwo, '?');
+			turn--;
 		}
 		if (playerList.get(0).getScore() + playerList.get(1).getScore() == cardPairs) {
 			if(playerList.get(0).getScore() == playerList.get(1).getScore()) {
@@ -101,7 +102,7 @@ public class MemoryImplementation implements MemoryInterface {
 			throw new StateException("It is not the turn of " + p.getPlayerNumber() + " !");
 		} else if (key < 0) {
 			throw new IllegalArgumentException("This key does not correspond with any legal key!");
-		} else if (key > totalCards.size()) {
+		} else if (key > totalCards.size() - 1) {
 			throw new KeyOutOfBoundsException("This key does not correspond with any legal key!");
 		} else if (pickOne == -1) {
 			pickOne = key;
@@ -119,4 +120,6 @@ public class MemoryImplementation implements MemoryInterface {
 	public List<Character> getTotalCards() {
 		return totalCards;
 	}
+
+	public int getTurn(){return turn;}
 }

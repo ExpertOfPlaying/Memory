@@ -96,7 +96,9 @@ public class MemoryMain {
 				System.out.println(e.getMessage());
 				gameOn = false;
 			}
-			cnt++;
+			if(mimp.getTurn() != cnt) {
+				cnt++;
+			}
 		}
 	}
 
