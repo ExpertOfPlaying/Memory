@@ -7,38 +7,38 @@ public class MemoryMain {
 
 	private static MemoryImplementation mimp;
 
-	public MemoryMain(String name1, String name2){
+	public MemoryMain(String name1, String name2) {
 		mimp = new MemoryImplementation(name1, name2);
 	}
 
-	public void getInteger(Player user, boolean choosePN) throws StateException{
+	public void getInteger(Player user, boolean choosePN) throws StateException {
 		Scanner sc = new Scanner(System.in);
 		boolean parameterNotFound = true;
 		int chosenNumber;
 		while (parameterNotFound) {
 			try {
 				chosenNumber = Integer.parseInt(sc.next());
-				if(choosePN) {
+				if (choosePN) {
 					if (chosenNumber < 1 || chosenNumber > 2) {
 						System.out.println("This value in invalid! Please enter either 1 or 2!");
 					} else {
 						mimp.choosePlayerNumber(user, PlayerNumber.values()[chosenNumber - 1]);
 						parameterNotFound = false;
 					}
-				}else{
-					if(chosenNumber < 1 || chosenNumber > 18){
+				} else {
+					if (chosenNumber < 1 || chosenNumber > 18) {
 						System.out.println("This value in invalid! Please enter a value between 1 and 18!");
-					} else{
+					} else {
 						mimp.setNumberOfCardPairs(chosenNumber);
 						parameterNotFound = false;
 					}
 				}
 			} catch (NumberFormatException e) {
-				if(choosePN) {
+				if (choosePN) {
 					System.out.println("This value in invalid! Please enter either 1 or 2!");
-				}else
+				} else
 					System.out.println("This value in invalid! Please enter a value between 1 and 18!");
-			} catch (PlayerNumberTakenException e){
+			} catch (PlayerNumberTakenException e) {
 				System.out.println(e.getMessage());
 			}
 		}
@@ -54,19 +54,29 @@ public class MemoryMain {
 				System.out.println(user.getUser() + ", choose a card!");
 				pickedCardNumber = Integer.parseInt(sc.next());
 				mimp.pickCard(pickedCardNumber, user);
+				gameOn = false;
+			} catch (NumberFormatException e) {
+				System.out.println("This value in invalid! Please choose from the possible values!");
+			} catch (IllegalArgumentException | CardAlreadyPickedException | KeyOutOfBoundsException e) {
+				System.out.println(e.getMessage());
+			}
+		}
+		gameOn = true;
+		while (gameOn) {
+			try {
 				System.out.println(user.getUser() + ", choose another card!");
 				pickedCardNumber = Integer.parseInt(sc.next());
 				mimp.pickCard(pickedCardNumber, user);
 				gameOn = false;
-			} catch(NumberFormatException e){
+			} catch (NumberFormatException e) {
 				System.out.println("This value in invalid! Please choose from the possible values!");
-			} catch (IllegalArgumentException | CardAlreadyPickedException | KeyOutOfBoundsException e){
-				e.printStackTrace();
+			} catch (IllegalArgumentException | CardAlreadyPickedException | KeyOutOfBoundsException e) {
+				System.out.println(e.getMessage());
 			}
 		}
 	}
 
-	public static void main(String[] args) throws StateException, IllegalArgumentException{
+	public static void main(String[] args) throws StateException, IllegalArgumentException {
 		Gamefield gamefield = new Gamefield();
 		Scanner sc = new Scanner(System.in);
 		System.out.println("Input your name!");
@@ -85,18 +95,18 @@ public class MemoryMain {
 		mema.getInteger(user1, false);
 		int cnt = 1;
 		boolean gameOn = true;
-		while(gameOn){
+		while (gameOn) {
 			try {
 				if (cnt % 2 != 0) {
 					mema.playTheGame(user1, gamefield);
 				} else {
 					mema.playTheGame(user2, gamefield);
 				}
-			}catch (GameOverException e){
+			} catch (GameOverException e) {
 				System.out.println(e.getMessage());
 				gameOn = false;
 			}
-			if(mimp.getTurn() != cnt) {
+			if (mimp.getTurn() != cnt) {
 				cnt++;
 			}
 		}

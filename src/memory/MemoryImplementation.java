@@ -77,11 +77,10 @@ public class MemoryImplementation implements MemoryInterface {
 			turn--;
 		}
 		if (playerList.get(0).getScore() + playerList.get(1).getScore() == cardPairs) {
-			if(playerList.get(0).getScore() == playerList.get(1).getScore()) {
+			if (playerList.get(0).getScore() == playerList.get(1).getScore()) {
 				System.out.println("Draw!");
 				throw new GameOverException("Game Over");
-			}
-			else if (playerList.get(0).getScore() > playerList.get(1).getScore()) {
+			} else if (playerList.get(0).getScore() > playerList.get(1).getScore()) {
 				System.out.println("Player one wins!");
 				throw new GameOverException("Game Over");
 			} else {
@@ -96,9 +95,10 @@ public class MemoryImplementation implements MemoryInterface {
 	}
 
 	@Override
-	public void pickCard(int key, Player p)
-			throws StateException, KeyOutOfBoundsException, CardAlreadyPickedException, IllegalArgumentException, GameOverException {
-		if(turn % 2 == 1 && p.getPlayerNumber() != PlayerNumber.PLAYER_ONE || turn % 2 == 0 && p.getPlayerNumber() != PlayerNumber.PLAYER_TWO) {
+	public void pickCard(int key, Player p) throws StateException, KeyOutOfBoundsException, CardAlreadyPickedException,
+			IllegalArgumentException, GameOverException {
+		if (turn % 2 == 1 && p.getPlayerNumber() != PlayerNumber.PLAYER_ONE
+				|| turn % 2 == 0 && p.getPlayerNumber() != PlayerNumber.PLAYER_TWO) {
 			throw new StateException("It is not the turn of " + p.getPlayerNumber() + " !");
 		} else if (key < 0) {
 			throw new IllegalArgumentException("This key does not correspond with any legal key!");
@@ -110,10 +110,11 @@ public class MemoryImplementation implements MemoryInterface {
 		} else {
 			if (pickOne == key) {
 				throw new CardAlreadyPickedException("This card has already been picked!");
+			} else {
+				pickTwo = key;
+				System.out.println(totalCards.get(pickTwo));
+				prepareNextRound(p);
 			}
-			pickTwo = key;
-			System.out.println(totalCards.get(pickTwo));
-			prepareNextRound(p);
 		}
 	}
 
@@ -121,5 +122,7 @@ public class MemoryImplementation implements MemoryInterface {
 		return totalCards;
 	}
 
-	public int getTurn(){return turn;}
+	public int getTurn() {
+		return turn;
+	}
 }
