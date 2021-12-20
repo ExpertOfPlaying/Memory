@@ -6,7 +6,7 @@ import java.util.List;
 
 /**
  * The implementation of the game Memory
- * 
+ *
  * @author Alexander Yurovskyy
  * @version 2.0
  */
@@ -102,7 +102,7 @@ public class MemoryImplementation implements MemoryInterface {
 			throw new StateException("It is not the turn of " + p.getPlayerNumber() + " !");
 		} else if (key < 0) {
 			throw new IllegalArgumentException("This key does not correspond with any legal key!");
-		} else if (key > totalCards.size() - 1) {
+		} else if (key > totalCards.size() - 1 || totalCards.get(key) == '?') {
 			throw new KeyOutOfBoundsException("This key does not correspond with any legal key!");
 		} else if (pickOne == -1) {
 			pickOne = key;
@@ -124,5 +124,9 @@ public class MemoryImplementation implements MemoryInterface {
 
 	public int getTurn() {
 		return turn;
+	}
+
+	public int getPickOne(){
+		return pickOne;
 	}
 }
